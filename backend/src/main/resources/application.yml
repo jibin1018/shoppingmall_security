@@ -1,0 +1,45 @@
+server:
+  port: 8080
+  error:
+    # [VULN] 상세 에러 메시지 노출 - 스택트레이스가 응답에 포함됨
+    include-stacktrace: always
+    include-message: always
+    include-exception: true
+
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@//localhost:1521/XEPDB1
+    username: shop_user          # Oracle 계정 (직접 수정)
+    password: shop_pass          # Oracle 비밀번호 (직접 수정)
+    driver-class-name: oracle.jdbc.OracleDriver
+
+  jpa:
+    database-platform: org.hibernate.dialect.OracleDialect
+    hibernate:
+      ddl-auto: create-drop       # 개발용: 앱 시작 시 테이블 재생성
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+
+jwt:
+  # [VULN] 취약한 JWT 시크릿 - 짧고 예측 가능
+  secret: secret123
+  # [VULN] 만료 시간 없음 (0 = 무제한)
+  expiration: 0
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /api-docs
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    # [VULN] SQL 바인딩 파라미터 로그 출력 (민감 정보 노출)
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
