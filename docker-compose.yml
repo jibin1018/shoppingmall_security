@@ -1,0 +1,20 @@
+services:
+  oracle-db:
+    image: gvenzl/oracle-free:23.4
+    container_name: shoppingmall-oracle
+    ports:
+      - "1521:1521"
+    environment:
+      ORACLE_PASSWORD: Oracle123
+      APP_USER: shop_user
+      APP_USER_PASSWORD: shop_pass
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+
+volumes:
+  oracle-data:

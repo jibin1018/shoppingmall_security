@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 4000
   error:
     # [VULN] 상세 에러 메시지 노출 - 스택트레이스가 응답에 포함됨
     include-stacktrace: always
@@ -8,13 +8,12 @@ server:
 
 spring:
   datasource:
-    url: jdbc:oracle:thin:@//localhost:1521/XEPDB1
+    url: jdbc:oracle:thin:@//localhost:1521/FREEPDB1
     username: shop_user          # Oracle 계정 (직접 수정)
     password: shop_pass          # Oracle 비밀번호 (직접 수정)
     driver-class-name: oracle.jdbc.OracleDriver
 
   jpa:
-    database-platform: org.hibernate.dialect.OracleDialect
     hibernate:
       ddl-auto: create-drop       # 개발용: 앱 시작 시 테이블 재생성
     show-sql: true
