@@ -12,7 +12,6 @@ const styles: Record<string, React.CSSProperties> = {
   btn: { width: '100%', padding: 12, background: '#e94560', color: '#fff', border: 'none', borderRadius: 4, fontSize: 15, fontWeight: 600, cursor: 'pointer' },
   error: { color: '#e94560', fontSize: 13, marginBottom: 12, background: '#fff0f3', padding: '8px 12px', borderRadius: 4 },
   link: { display: 'block', textAlign: 'center', marginTop: 16, color: '#666', fontSize: 13 },
-  hint: { background: '#fff8e1', border: '1px solid #ffe082', borderRadius: 4, padding: '10px 12px', marginBottom: 16, fontSize: 12, color: '#555' },
 };
 
 export default function LoginPage() {
@@ -45,11 +44,6 @@ export default function LoginPage() {
       <div style={styles.card}>
         <h2 style={styles.title}>로그인</h2>
         <p style={styles.sub}>계정에 로그인하세요</p>
-
-        {/* 취약점 힌트 (실습용) */}
-        <div style={styles.hint}>
-          💡 SQL Injection 힌트: username 필드에 <code>' OR '1'='1</code> 시도
-        </div>
 
         {error && <div style={styles.error}>{error}</div>}
 
