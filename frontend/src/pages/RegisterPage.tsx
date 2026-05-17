@@ -2,71 +2,98 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { register } from '../api/auth';
 
-const styles: Record<string, React.CSSProperties> = {
-  wrap: { minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f5f5', padding: 20 },
-  card: { background: '#fff', borderRadius: 8, padding: 40, width: 420, boxShadow: '0 4px 20px rgba(0,0,0,0.1)' },
-  title: { fontSize: 24, fontWeight: 700, marginBottom: 8, color: '#1a1a2e' },
-  sub: { color: '#888', fontSize: 13, marginBottom: 28 },
-  label: { display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6, color: '#444' },
-  input: { width: '100%', padding: '10px 12px', border: '1px solid #ddd', borderRadius: 4, fontSize: 14, marginBottom: 16 },
-  btn: { width: '100%', padding: 12, background: '#1a1a2e', color: '#fff', border: 'none', borderRadius: 4, fontSize: 15, fontWeight: 600, cursor: 'pointer' },
-  error: { color: '#e94560', fontSize: 13, marginBottom: 12, background: '#fff0f3', padding: '8px 12px', borderRadius: 4 },
-  success: { color: '#2e7d32', fontSize: 13, marginBottom: 12, background: '#f1f8e9', padding: '8px 12px', borderRadius: 4 },
-  link: { display: 'block', textAlign: 'center', marginTop: 16, color: '#666', fontSize: 13 },
-};
+const PRIMARY = '#FF3D78';
+
+interface FormField { label: string; key: string; type?: string; placeholder: string; }
+
+const FIELDS: FormField[] = [
+  { label: '아이디', key: 'username', placeholder: '영문, 숫자 조합' },
+  { label: '비밀번호', key: 'password', type: 'password', placeholder: '8자 이상 입력' },
+  { label: '이메일', key: 'email', type: 'email', placeholder: 'example@email.com' },
+  { label: '전화번호', key: 'phone', placeholder: '010-0000-0000' },
+  { label: '주소', key: 'address', placeholder: '주소를 입력해주세요' },
+];
 
 export default function RegisterPage() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ username: '', password: '', email: '', phone: '', address: '' });
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [focused, setFocused] = useState('');
 
   const set = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm(prev => ({ ...prev, [key]: e.target.value }));
 
   const handleRegister = async () => {
-    setError(''); setSuccess('');
+    setError('');
+    if (!form.username || !form.password || !form.email) { setError('필수 항목을 입력해주세요.'); return; }
+    setLoading(true);
     try {
       await register(form);
-      setSuccess('회원가입 완료! 로그인 페이지로 이동합니다.');
-      setTimeout(() => navigate('/login'), 1500);
+      setSuccess(true);
+      setTimeout(() => navigate('/login'), 1800);
     } catch (e: unknown) {
       const err = e as { response?: { data?: { error?: string } } };
-      setError(err.response?.data?.error || '회원가입 실패');
+      setError(err.response?.data?.error || '회원가입에 실패했습니다.');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const field = (label: string, key: string, type = 'text', placeholder = '') => (
-    <>
-      <label style={styles.label}>{label}</label>
-      <input
-        style={styles.input}
-        type={type}
-        value={(form as Record<string, string>)[key]}
-        onChange={set(key)}
-        placeholder={placeholder}
-      />
-    </>
-  );
+  if (success) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#fafafa' }}>
+        <div style={{ fontSize: 56, marginBottom: 16 }}>🎉</div>
+        <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 8 }}>가입 완료!</div>
+        <div style={{ fontSize: 14, color: '#999' }}>로그인 페이지로 이동합니다...</div>
+      </div>
+    );
+  }
 
   return (
-    <div style={styles.wrap}>
-      <div style={styles.card}>
-        <h2 style={styles.title}>회원가입</h2>
-        <p style={styles.sub}>새 계정을 만드세요</p>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#fafafa', padding: 20 }}>
+      <Link to="/" style={{ fontSize: 28, fontWeight: 700, color: PRIMARY, letterSpacing: -1, marginBottom: 36 }}>SHOPLAB</Link>
 
-        {error && <div style={styles.error}>{error}</div>}
-        {success && <div style={styles.success}>{success}</div>}
+      <div style={{ background: '#fff', borderRadius: 16, padding: '40px 36px', width: '100%', maxWidth: 420, boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
+        <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 6 }}>회원가입</h2>
+        <p style={{ fontSize: 13, color: '#999', marginBottom: 28 }}>정보를 입력하고 쇼핑을 시작하세요</p>
 
-        {field('아이디', 'username', 'text', '아이디 (영문/숫자)')}
-        {field('비밀번호', 'password', 'password', '비밀번호')}
-        {field('이메일', 'email', 'email', 'example@email.com')}
-        {field('전화번호', 'phone', 'text', '010-0000-0000')}
-        {field('주소', 'address', 'text', '주소 입력')}
+        {error && (
+          <div style={{ background: '#fff5f7', border: '1px solid #ffe0e8', borderRadius: 8, padding: '10px 14px', fontSize: 13, color: '#e63060', marginBottom: 16 }}>
+            {error}
+          </div>
+        )}
 
-        <button style={styles.btn} onClick={handleRegister}>가입하기</button>
+        {FIELDS.map(({ label, key, type = 'text', placeholder }) => (
+          <div key={key} style={{ marginBottom: 14 }}>
+            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#555', marginBottom: 6 }}>
+              {label} {['username', 'password', 'email'].includes(key) && <span style={{ color: PRIMARY }}>*</span>}
+            </label>
+            <input
+              type={type}
+              value={(form as Record<string, string>)[key]}
+              onChange={set(key)}
+              placeholder={placeholder}
+              onFocus={() => setFocused(key)}
+              onBlur={() => setFocused('')}
+              style={{ width: '100%', height: 46, padding: '0 14px', border: `1.5px solid ${focused === key ? PRIMARY : '#eee'}`, borderRadius: 10, fontSize: 14, outline: 'none', background: '#fafafa', transition: 'border-color .2s' }}
+            />
+          </div>
+        ))}
 
-        <Link to="/login" style={styles.link}>이미 계정이 있으신가요? 로그인</Link>
+        <button
+          onClick={handleRegister}
+          disabled={loading}
+          style={{ width: '100%', height: 48, background: loading ? '#ffb3cc' : PRIMARY, color: '#fff', border: 'none', borderRadius: 10, fontSize: 15, fontWeight: 700, marginTop: 10 }}
+        >
+          {loading ? '처리 중...' : '가입하기'}
+        </button>
+
+        <div style={{ marginTop: 20, textAlign: 'center', fontSize: 13, color: '#aaa' }}>
+          이미 계정이 있으신가요?{' '}
+          <Link to="/login" style={{ color: PRIMARY, fontWeight: 600 }}>로그인</Link>
+        </div>
       </div>
     </div>
   );
