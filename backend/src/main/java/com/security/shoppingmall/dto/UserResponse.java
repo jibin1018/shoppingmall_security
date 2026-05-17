@@ -13,6 +13,7 @@ public class UserResponse {
     private String phone;
     private String address;
     private String role;
+    private String brandName;
 
     public UserResponse(User user) {
         this.id = user.getId();
@@ -22,5 +23,6 @@ public class UserResponse {
         this.phone = user.getPhone();
         this.address = user.getAddress();
         this.role = user.getRole();
+        this.brandName = user.getBrandName();
     }
 }

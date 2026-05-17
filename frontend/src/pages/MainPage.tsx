@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { getProducts } from '../api/product';
 import Header from '../components/Header';
 import ProductCard from '../components/ProductCard';
@@ -91,7 +92,11 @@ export default function MainPage() {
 
         {/* 상품 그리드 */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '24px 16px', paddingBottom: 60 }}>
-          {sorted.map(p => <ProductCard key={p.id} product={p} />)}
+          {sorted.map(p => (
+            <Link key={p.id} to={`/products/${p.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <ProductCard product={p} />
+            </Link>
+          ))}
         </div>
       </div>
 

@@ -18,6 +18,12 @@ public class ProductController {
 
     private final ProductService productService;
 
+    @GetMapping("/{id}")
+    @Operation(summary = "상품 단건 조회")
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.getProduct(id));
+    }
+
     @GetMapping
     @Operation(summary = "전체 상품 조회")
     public ResponseEntity<List<ProductResponse>> getAllProducts() {

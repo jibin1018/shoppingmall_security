@@ -19,6 +19,7 @@ export default function Header({ onProductsChange, activeCategory, onCategoryCha
   const token = localStorage.getItem('token');
   const username = localStorage.getItem('username');
   const userId = localStorage.getItem('userId');
+  const role = localStorage.getItem('role');
 
   const logout = () => { localStorage.clear(); navigate('/login'); };
 
@@ -74,8 +75,24 @@ export default function Header({ onProductsChange, activeCategory, onCategoryCha
 
         {/* 우측 메뉴 */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0 }}>
+          <Link to="/events" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '6px 10px', fontSize: 10, color: '#555', gap: 2 }}>
+            <span style={{ fontSize: 20 }}>🎉</span><span>이벤트</span>
+          </Link>
+          <Link to="/cart" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '6px 10px', fontSize: 10, color: '#555', gap: 2 }}>
+            <span style={{ fontSize: 20 }}>🛒</span><span>장바구니</span>
+          </Link>
           {token ? (
             <>
+              {role === 'SELLER' && (
+                <Link to="/seller" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '6px 10px', fontSize: 10, color: '#555', gap: 2 }}>
+                  <span style={{ fontSize: 20 }}>🏪</span><span>판매자센터</span>
+                </Link>
+              )}
+              {role === 'ADMIN' && (
+                <Link to="/admin" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '6px 10px', fontSize: 10, color: '#555', gap: 2 }}>
+                  <span style={{ fontSize: 20 }}>⚙️</span><span>관리자</span>
+                </Link>
+              )}
               <Link to={`/mypage/${userId}`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '6px 10px', fontSize: 10, color: '#555', gap: 2 }}>
                 <span style={{ fontSize: 20 }}>👤</span>
                 <span>{username}</span>

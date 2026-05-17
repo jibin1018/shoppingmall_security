@@ -12,6 +12,8 @@ public class ProductResponse {
     private String imageUrl;
     private Integer stock;
     private String category;
+    private Long sellerId;
+    private String sellerBrandName;
 
     public ProductResponse(Product product) {
         this.id = product.getId();
@@ -21,5 +23,11 @@ public class ProductResponse {
         this.imageUrl = product.getImageUrl();
         this.stock = product.getStock();
         this.category = product.getCategory();
+        this.sellerId = product.getSellerId();
+    }
+
+    public ProductResponse(Product product, String sellerBrandName) {
+        this(product);
+        this.sellerBrandName = sellerBrandName;
     }
 }

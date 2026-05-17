@@ -32,7 +32,11 @@ public class User {
     @Column(length = 200)
     private String address;
 
-    // [VULN] 역할을 문자열로 단순 저장 - 검증 로직 없음
+    // [VULN] 역할을 문자열로 단순 저장 - 검증 로직 없음 (USER / SELLER / ADMIN)
     @Column(nullable = false, length = 20)
     private String role = "USER";
+
+    // SELLER 역할일 때 사용하는 브랜드/상점명
+    @Column(length = 100)
+    private String brandName;
 }

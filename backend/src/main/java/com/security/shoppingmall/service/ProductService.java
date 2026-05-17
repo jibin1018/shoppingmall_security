@@ -14,6 +14,12 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
+    public ProductResponse getProduct(Long id) {
+        return productRepository.findById(id)
+                .map(ProductResponse::new)
+                .orElseThrow(() -> new RuntimeException("상품을 찾을 수 없습니다. id=" + id));
+    }
+
     public List<ProductResponse> getAllProducts() {
         return productRepository.findAll().stream()
                 .map(ProductResponse::new)
@@ -28,6 +34,12 @@ public class ProductService {
 
     public List<ProductResponse> getByCategory(String category) {
         return productRepository.findByCategory(category).stream()
+                .map(ProductResponse::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<ProductResponse> getProductsBySeller(Long sellerId) {
+        return productRepository.findBySellerId(sellerId).stream()
                 .map(ProductResponse::new)
                 .collect(Collectors.toList());
     }

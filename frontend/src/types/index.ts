@@ -6,16 +6,19 @@ export interface Product {
   imageUrl: string;
   stock: number;
   category: string;
+  sellerId?: number;
+  sellerBrandName?: string;
 }
 
 export interface User {
   id: number;
   username: string;
-  password: string; // [VULN] 서버가 비밀번호를 응답에 포함해서 넘겨줌
+  password: string;
   email: string;
   phone: string;
   address: string;
   role: string;
+  brandName?: string;
 }
 
 export interface LoginResponse {
@@ -24,6 +27,56 @@ export interface LoginResponse {
   userId: number;
   username: string;
   role: string;
+}
+
+export interface CartItem {
+  id: number;
+  productId: number;
+  quantity: number;
+}
+
+export interface OrderItemRequest {
+  productId: number;
+  productName: string;
+  price: number;
+  quantity: number;
+}
+
+export interface OrderRequest {
+  items: OrderItemRequest[];
+  totalPrice: number;
+  deliveryAddress: string;
+  paymentMethod: string;
+}
+
+export interface OrderItem {
+  id: number;
+  productId: number;
+  productName: string;
+  price: number;
+  quantity: number;
+}
+
+export interface Order {
+  id: number;
+  userId: number;
+  totalPrice: number;
+  status: string;
+  deliveryAddress: string;
+  paymentMethod: string;
+  createdAt: string;
+  items: OrderItem[];
+}
+
+export interface Event {
+  id: number;
+  title: string;
+  description: string;
+  imageUrl: string;
+  discountRate: number;
+  startDate: string;
+  endDate: string;
+  active: boolean;
 }
 
 export interface AuthState {

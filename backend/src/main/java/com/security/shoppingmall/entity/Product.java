@@ -34,4 +34,8 @@ public class Product {
 
     @Column(length = 50)
     private String category;
+
+    // 등록한 판매자 userId (null이면 관리자 등록 상품)
+    @Column
+    private Long sellerId;
 }
