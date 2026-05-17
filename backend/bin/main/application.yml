@@ -26,8 +26,8 @@ spring:
       fail-on-empty-beans: false
 
 jwt:
-  # [VULN] 취약한 JWT 시크릿 - 짧고 예측 가능
-  secret: secret123
+  # [VULN] 취약한 JWT 시크릿 - 단순하고 예측 가능 (최소 32바이트 요구로 패딩)
+  secret: secret12345678901234567890123456
   # [VULN] 만료 시간 없음 (0 = 무제한)
   expiration: 0
 
